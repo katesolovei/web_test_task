@@ -1,27 +1,35 @@
 <?php
 include "dbFuncs.php";
 
-if (checkDB(DB_NAME)) createDB();
 
-if (checkTable($tableGoods)) {
-    createTableGoodsList($tableGoods);
+$func = new dbFuncs();
+
+if ($func->checkDB(DB_NAME)) $func->createDB();
+
+if ($func->checkTable($tableGoods)) {
+    $func->createTableGoodsList($tableGoods);
 }
 
+$goods[0] = new Product('ZA', 2.0, '7 for 4');
+$goods[1] = new Product('YB', 12.0, '');
+$goods[2] = new Product('FC', 1.25, '6 for 6');
+$goods[3] = new Product('GD', 0.15, '');
+
 // Filling in the table with Product List
-if (checkFillingTable($tableGoods)) {
+if ($func->checkFillingTable($tableGoods)) {
     $goods_number = count($goods);
     print ($goods_number);
     for ($i = 0; $i < $goods_number; $i++) {
-        fillInTableGoods($goods[$i]['code'], $goods[$i]['price'], $goods[$i]['offer'], $tableGoods);
+        $func->fillInTableGoods($goods[$i]->getCode(), $goods[$i]->getPrice(), $goods[$i]->getOffer(), $tableGoods);
     }
 }
 
-if (checkTable($tableCart)) createTableShoppingCart($tableCart);
+if ($func->checkTable($tableCart)) $func->createTableShoppingCart($tableCart);
 
 if (isset($_GET['code'])) {
-    $code = test_input($_GET['code']);
+    $code = $func->test_input($_GET['code']);
 
-    addToCart($code, $tableCart);
+    $func->addToCart($code, $tableCart);
 }
 
 ?>
@@ -76,7 +84,7 @@ if (isset($_GET['code'])) {
             <th class="thead">Action</th>
         </tr>
         <?php
-        $goods = getGoods($tableGoods);
+        $goods = $func->getGoods($tableGoods);
         foreach ($goods as $product) {
             echo '<tr><td>' . $product['code'] . '</td>' . '<td>£' . $product['price'];
             if (!empty($product['special_offer'])) {

@@ -1,16 +1,18 @@
 <?php
 include "dbFuncs.php";
 
+$func = new dbFuncs();
+
 // Choising the number of products for delete
 if (isset($_GET['code']) && isset($_GET['mode'])) {
-    $code = test_input($_GET['code']);
-    $mode = test_input($_GET['mode']);
+    $code = $func->test_input($_GET['code']);
+    $mode = $func->test_input($_GET['mode']);
     switch ($mode) {
         case 'one':
-            deleteOneProduct($code, $tableCart);
+            $func->deleteOneProduct($code, $tableCart);
             break;
         case 'all':
-            deleteAllProducts($code, $tableCart);
+            $func->deleteAllProducts($code, $tableCart);
             break;
     }
 }
@@ -68,7 +70,8 @@ if (isset($_GET['code']) && isset($_GET['mode'])) {
             <th class="thead">Action</th>
         </tr>
         <?php
-        $goods = getGoods($tableCart);
+        $func = new dbFuncs();
+        $goods = $func->getGoods($tableCart);
         foreach ($goods as $product) {
             echo '<tr><td>' . $product['code'] . '</td>' . '<td>' . $product['numb'] . '</td>';
             echo '<td>£' . $product['price'] . '</td>';
@@ -78,7 +81,7 @@ if (isset($_GET['code']) && isset($_GET['mode'])) {
         ?>
         <tr>
             <td colspan="2"><b>Total summ</b></td>
-            <td><b>£<?php (!getTotalSum($tableCart)) ? print(0) : print(getTotalSum($tableCart)); ?></b></td>
+            <td><b>£<?php (!$func->getTotalSum($tableCart)) ? print(0) : print($func->getTotalSum($tableCart)); ?></b></td>
         </tr>
     </table>
 </form>
